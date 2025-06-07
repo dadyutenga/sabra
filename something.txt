@@ -1,0 +1,6 @@
+ser Roles
+
+You’ll probably work with two main roles:
+Role	Capabilities
+ROLE_ADMIN	Can post jobs, see applicants
+ROLE_USER	Can browse and apply to jobs
