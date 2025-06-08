@@ -153,16 +153,24 @@
             <h2>Job Seeker Login</h2>
             <p>Welcome back! Please login to access your job search dashboard.</p>
             
-            <form id="loginForm">
+            <!-- Check for error messages from Spring Security -->
+            <div th:if="${param.error}" style="color: red; margin-bottom: 1rem;">
+                Invalid email or password. Please try again.
+            </div>
+            
+            <form id="loginForm" action="/login" method="post">
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required placeholder="your@email.com">
+                    <label for="username">Email</label>
+                    <input type="email" id="username" name="username" required placeholder="your@email.com">
                 </div>
                 
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required placeholder="••••••••">
                 </div>
+                
+                <!-- Include CSRF token -->
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                 
                 <button type="submit" class="btn">Login</button>
                 
