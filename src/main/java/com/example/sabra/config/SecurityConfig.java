@@ -14,11 +14,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/css/**", "/js/**", "/images/**").permitAll() // Allow access to welcome page and static resources
+                .requestMatchers("/", "/css/**", "/js/**", "/images/**", "/auth/**").permitAll() // Allow access to welcome page, static resources, and auth pages
                 .anyRequest().authenticated() // Require authentication for all other requests
             )
             .formLogin(form -> form
-                .loginPage("/login") // Specify custom login page if you have one, otherwise Spring provides a default
+                .loginPage("/auth/seeker/login") // Default login page for seekers, can be overridden based on user type
                 .permitAll()
             )
             .logout(logout -> logout
