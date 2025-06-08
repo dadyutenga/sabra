@@ -450,24 +450,20 @@
             }
         });
 
-        // Button click animations and redirects
+        // Button click animations without preventing default behavior
         document.getElementById('posterBtn').addEventListener('click', function(e) {
-            e.preventDefault();
+            // Do not prevent default, let the href handle redirection
             this.style.transform = 'scale(0.95)';
             setTimeout(() => {
                 this.style.transform = 'scale(1)';
-                // In a real Spring Boot app, this would redirect to your controller endpoint
-                alert('Redirecting to Job Poster Dashboard...\n\nIn your Spring Boot app, this would redirect to:\n/job-posters or /employer/dashboard');
             }, 150);
         });
 
         document.getElementById('seekerBtn').addEventListener('click', function(e) {
-            e.preventDefault();
+            // Do not prevent default, let the href handle redirection
             this.style.transform = 'scale(0.95)';
             setTimeout(() => {
                 this.style.transform = 'scale(1)';
-                // In a real Spring Boot app, this would redirect to your controller endpoint
-                alert('Redirecting to Job Seeker Dashboard...\n\nIn your Spring Boot app, this would redirect to:\n/job-seekers or /candidate/dashboard');
             }, 150);
         });
 

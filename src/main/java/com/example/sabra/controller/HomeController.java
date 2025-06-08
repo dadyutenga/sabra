@@ -13,11 +13,11 @@ public class HomeController {
     
     @GetMapping("/job-posters")
     public String jobPosters() {
-        return "job-posters"; // This will need a corresponding HTML file
+        return "redirect:/auth/poster/login";
     }
     
     @GetMapping("/job-seekers")
     public String jobSeekers() {
-        return "job-seekers"; // This will need a corresponding HTML file
+        return "redirect:/auth/seeker/login";
     }
 }
