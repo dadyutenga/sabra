@@ -153,7 +153,10 @@
             <h2>Employer Registration</h2>
             <p>Create an account to post jobs and find talented candidates.</p>
             
-            <form id="registerForm">
+            <!-- Display error message if registration fails -->
+            <div th:if="${error}" style="color: red; margin-bottom: 1rem;" th:text="${error}"></div>
+            
+            <form id="registerForm" action="/auth/poster/register" method="post">
                 <div class="form-group">
                     <label for="companyName">Company Name</label>
                     <input type="text" id="companyName" name="companyName" required placeholder="Your Company Inc.">
@@ -174,6 +177,9 @@
                     <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="••••••••">
                 </div>
                 
+                <!-- Include CSRF token for Spring Security -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                
                 <button type="submit" class="btn">Register</button>
                 
                 <p class="footer-text">
@@ -184,38 +190,19 @@
     </div>
 
     <script>
+        // Keep client-side validation if desired, but remove simulated submission
         document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const companyName = document.getElementById('companyName').value;
-            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             
-            // Validation
-            if (!companyName || !email || !password || !confirmPassword) {
-                alert('Please fill in all fields');
-                return;
-            }
-            
             if (password !== confirmPassword) {
+                e.preventDefault();
                 alert('Passwords do not match');
-                return;
-            }
-            
-            if (password.length < 8) {
+            } else if (password.length < 8) {
+                e.preventDefault();
                 alert('Password must be at least 8 characters');
-                return;
             }
-            
-            // In a real app, this would be an API call to your Spring Boot backend
-            console.log('Registration attempt with:', { companyName, email, password });
-            
-            // Simulate successful registration
-            setTimeout(() => {
-                alert('Registration successful! Redirecting to login...');
-                // window.location.href = '/auth/poster/login';
-            }, 1000);
+            // Form will submit to server if validation passes
         });
     </script>
 </body>
