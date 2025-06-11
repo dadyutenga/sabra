@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Jobs - JobConnect</title>
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --danger: #ff6b6b;
+            --danger-alt: #ee5a24;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 1.75rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, var(--danger), var(--danger-alt));
+        }
+
+        .jobs-container {
+            margin: 3rem 0;
+        }
+
+        .jobs-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .jobs-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .job-list {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .job-item {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .job-item:last-child {
+            border-bottom: none;
+        }
+
+        .job-info h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .job-info p {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background: var(--card-bg);
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            color: var(--text-light);
+            font-size: 1.125rem;
+        }
+
+        @media (max-width: 768px) {
+            .job-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .job-actions {
+                width: 100%;
+                margin-top: 1rem;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="container">
+            <a href="/" class="logo">JobConnect</a>
+            <div>
+                <a href="/poster/dashboard" class="btn">Back to Dashboard</a>
+                <a href="/logout" class="btn btn-danger">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="jobs-container">
+            <div class="jobs-header">
+                <h1>My Job Postings</h1>
+                <p>View and manage all jobs you've posted on JobConnect.</p>
+            </div>
+
+            <div th:if="${not #lists.isEmpty(jobs)}" class="job-list">
+                <div class="job-item" th:each="job : ${jobs}">
+                    <div class="job-info">
+                        <h3 th:text="${job.title}"></h3>
+                        <p th:text="'Location: ' + ${job.location}"></p>
+                        <p th:text="'Type: ' + ${job.jobType}"></p>
+                        <p th:text="'Posted on: ' + ${#temporals.format(job.postedDate, 'MMM dd, yyyy')}"></p>
+                    </div>
+                    <div class="job-actions">
+                        <a th:href="@{/applications/job/{id}(id=${job.id})}" class="btn">View Applications</a>
+                        <a th:href="@{/jobs/update/{id}(id=${job.id})}" class="btn btn-outline">Update</a>
+                        <a th:href="@{/jobs/delete/{id}(id=${job.id})}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this job?');">Delete</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="empty-state" th:if="${#lists.isEmpty(jobs)}">
+                <p>You haven't posted any jobs yet. Get started by posting a new job!</p>
+                <a href="/jobs/post" class="btn" style="margin-top: 1rem;">Post a Job</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html> 

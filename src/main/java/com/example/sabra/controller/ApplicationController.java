@@ -60,13 +60,19 @@ public class ApplicationController {
     // Employer: View applications for a job
     @GetMapping("/job/{jobId}")
     public String viewApplications(@PathVariable Long jobId, Model model, Authentication authentication) {
-        Job job = jobService.getJobById(jobId);
-        if (job == null || !job.getPoster().getEmail().equals(authentication.getName())) {
-            return "redirect:/poster/dashboard";
+        try {
+            Job job = jobService.getJobById(jobId);
+            if (job == null || !job.getPoster().getEmail().equals(authentication.getName())) {
+                return "redirect:/poster/dashboard";
+            }
+            model.addAttribute("job", job);
+            model.addAttribute("applications", applicationService.getApplicationsByJob(job));
+            return "poster/ViewApplications";
+        } catch (Exception e) {
+            // Log the error for debugging (in a real app, use a proper logger)
+            System.err.println("Error viewing applications for job " + jobId + ": " + e.getMessage());
+            return "redirect:/jobs/my-jobs?error=Unable to load applications due to an internal error.";
         }
-        model.addAttribute("job", job);
-        model.addAttribute("applications", applicationService.getApplicationsByJob(job));
-        return "poster/ViewApplications";
     }
 
     // Employer: Accept or reject an application

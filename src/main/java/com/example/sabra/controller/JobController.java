@@ -61,4 +61,53 @@ public class JobController {
         }
         return "seeker/JobDetails";
     }
+
+    @GetMapping("/my-jobs")
+    public String viewMyJobs(Model model, Authentication authentication) {
+        String email = authentication.getName();
+        User user = userService.findByEmail(email);
+        model.addAttribute("jobs", jobService.getJobsByPoster(user));
+        return "poster/MyJobs";
+    }
+
+    @GetMapping("/update/{id}")
+    public String showUpdateJobForm(@PathVariable Long id, Model model, Authentication authentication) {
+        Job job = jobService.getJobById(id);
+        if (job == null || !job.getPoster().getEmail().equals(authentication.getName())) {
+            return "redirect:/poster/dashboard";
+        }
+        model.addAttribute("job", job);
+        return "poster/UpdateJob";
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateJob(@PathVariable Long id, @ModelAttribute Job updatedJob, Authentication authentication, RedirectAttributes redirectAttributes) {
+        Job job = jobService.getJobById(id);
+        if (job == null || !job.getPoster().getEmail().equals(authentication.getName())) {
+            redirectAttributes.addFlashAttribute("error", "Job not found or you are not authorized to update it.");
+            return "redirect:/poster/dashboard";
+        }
+        updatedJob.setId(id);
+        updatedJob.setPoster(job.getPoster());
+        updatedJob.setPostedDate(job.getPostedDate());
+        jobService.saveJob(updatedJob);
+        redirectAttributes.addFlashAttribute("message", "Job updated successfully!");
+        return "redirect:/jobs/my-jobs";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteJob(@PathVariable Long id, Authentication authentication, RedirectAttributes redirectAttributes) {
+        Job job = jobService.getJobById(id);
+        if (job == null || !job.getPoster().getEmail().equals(authentication.getName())) {
+            redirectAttributes.addFlashAttribute("error", "Job not found or you are not authorized to delete it.");
+            return "redirect:/jobs/my-jobs";
+        }
+        try {
+            jobService.deleteJob(id);
+            redirectAttributes.addFlashAttribute("message", "Job deleted successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "An error occurred while deleting the job. Please try again.");
+        }
+        return "redirect:/jobs/my-jobs";
+    }
 } 
