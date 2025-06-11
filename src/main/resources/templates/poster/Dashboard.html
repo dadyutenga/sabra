@@ -5,30 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employer Dashboard - JobConnect</title>
     <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --danger: #ff6b6b;
+            --danger-alt: #ee5a24;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
 
         body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 50;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 2rem;
         }
 
         nav {
@@ -38,51 +55,172 @@
         }
 
         .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
+            font-size: 1.75rem;
+            font-weight: 800;
             text-decoration: none;
             color: white;
+            letter-spacing: -0.5px;
         }
 
         .dashboard-container {
-            padding: 2rem 0;
+            padding: 3rem 0;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .dashboard-header {
             text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .dashboard-header p {
+            color: var(--text-light);
+            font-size: 1.125rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
         .dashboard-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            padding: 3rem;
-            margin: 2rem auto;
-            width: 100%;
-            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            text-align: center;
         }
 
-        .dashboard-card h2 {
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50%;
+            font-size: 1.5rem;
+        }
+
+        .dashboard-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .dashboard-card p {
+            color: var(--text-light);
             margin-bottom: 1.5rem;
-            color: #2c3e50;
-            font-size: 2rem;
         }
 
         .btn {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 1.75rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 0.75rem;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin: 1rem;
+            transition: all 0.3s ease;
             text-decoration: none;
+            gap: 0.5rem;
         }
 
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(102, 126, 234, 0.3), 0 4px 6px -2px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, var(--danger), var(--danger-alt));
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 10px 15px -3px rgba(255, 107, 107, 0.3), 0 4px 6px -2px rgba(238, 90, 36, 0.1);
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
@@ -91,21 +229,52 @@
         <nav class="container">
             <a href="/" class="logo">JobConnect</a>
             <div>
-                <a href="/logout" class="btn" style="background: linear-gradient(45deg, #ff6b6b, #ee5a24);">Logout</a>
+                <a href="/logout" class="btn btn-danger">Logout</a>
             </div>
         </nav>
     </header>
 
-    <div class="dashboard-container">
-        <div class="dashboard-card">
-            <h2>Welcome to Your Employer Dashboard</h2>
-            <p>Here you can post jobs, manage applications, and view candidate profiles.</p>
-            <div>
-                <a href="#" class="btn">Post a Job</a>
-                <a href="#" class="btn">View Applications</a>
-                <a href="#" class="btn">Company Profile</a>
+    <main class="container">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h1>Employer Dashboard</h1>
+                <p>Manage your job postings, review applications, and connect with top talent all in one place.</p>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-value" th:text="${jobCount}"></div>
+                    <div class="stat-label">Active Jobs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" th:text="${applicationCount}"></div>
+                    <div class="stat-label">Applications</div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-icon">📝</div>
+                    <h3>Post a Job</h3>
+                    <p>Create a new job listing to attract qualified candidates for your open positions.</p>
+                    <a href="/jobs/post" class="btn">Post Job</a>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-icon">👥</div>
+                    <h3>Manage Applications</h3>
+                    <p>Review, filter, and respond to candidate applications for your job postings.</p>
+                    <a href="#" class="btn">View Applications</a>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-icon">🏢</div>
+                    <h3>Company Profile</h3>
+                    <p>Update your company information, branding, and hiring preferences.</p>
+                    <a href="#" class="btn">Edit Profile</a>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 </body>
 </html>

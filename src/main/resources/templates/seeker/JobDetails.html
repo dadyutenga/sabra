@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${job.title} + ' - JobConnect'">Job Details - JobConnect</title>
+    <style>
+        :root {
+            --primary: #4ecdc4;
+            --secondary: #44a08d;
+            --danger: #ff6b6b;
+            --danger-alt: #ee5a24;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 1.75rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(78, 205, 196, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, var(--danger), var(--danger-alt));
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .job-container {
+            margin: 3rem 0;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .job-details {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            padding: 2.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .job-header {
+            margin-bottom: 2rem;
+        }
+
+        .job-header h1 {
+            font-size: 2.25rem;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+
+        .job-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            color: var(--text-light);
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .job-section {
+            margin-bottom: 2rem;
+        }
+
+        .job-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .job-section p {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .apply-sidebar {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .apply-sidebar h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--text);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+            border: 1px dashed rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .message.success {
+            background: rgba(78, 205, 196, 0.1);
+            color: #2d7d6d;
+        }
+
+        .message.error {
+            background: rgba(255, 107, 107, 0.1);
+            color: #d32f2f;
+        }
+
+        @media (max-width: 992px) {
+            .job-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .apply-sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="container">
+            <a href="/" class="logo">JobConnect</a>
+            <div>
+                <a href="/seeker/dashboard" class="btn">Back to Dashboard</a>
+                <a href="/logout" class="btn btn-danger">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="job-container">
+            <div class="job-details">
+                <div class="job-header">
+                    <h1 th:text="${job.title}"></h1>
+                    <div class="job-meta">
+                        <span th:text="${job.location}"></span>
+                        <span th:text="${job.jobType}"></span>
+                        <span th:text="'Posted on ' + ${#temporals.format(job.postedDate, 'MMM dd, yyyy')}"></span>
+                    </div>
+                </div>
+
+                <div class="job-section">
+                    <h2>Job Description</h2>
+                    <p th:text="${job.description}" style="white-space: pre-line;"></p>
+                </div>
+            </div>
+
+            <div class="apply-sidebar">
+                <h3>Apply for this Job</h3>
+                
+                <div th:if="${message}" class="message success" th:text="${message}"></div>
+                <div th:if="${error}" class="message error" th:text="${error}"></div>
+                
+                <form th:action="@{/applications/apply/{id}(id=${job.id})}" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="cv">Upload Your CV</label>
+                        <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx" required>
+                    </div>
+                    
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    
+                    <button type="submit" class="btn" style="width: 100%;">Submit Application</button>
+                </form>
+                
+                <div style="margin-top: 1rem; text-align: center;">
+                    <a href="/jobs/search" class="btn btn-outline">Back to Job Search</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html> 
